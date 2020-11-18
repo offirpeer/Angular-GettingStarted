@@ -8,11 +8,16 @@ import { ProductService } from './product.service';
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit {
+
+  constructor(private productService: ProductService) {
+  }
+
   title: string = 'Product List';
   imageWidth: number = 50;
   imageMargin: number = 2;
   showImage: boolean = false;
-
+  filteredProducts: IProduct[];
+  products: IProduct[];
   _listFilter: string;
   get listFilter(): string {
     return this._listFilter;
@@ -20,15 +25,6 @@ export class ProductListComponent implements OnInit {
   set listFilter(value: string) {
     this._listFilter = value;
     this.filteredProducts = this.listFilter ? this.performFilter(this.listFilter) : this.products;
-  }
-
-  filteredProducts: IProduct[];
-  products: IProduct[];
-
-  constructor(private _productService: ProductService) {
-    this.products = _productService.getProducts();
-    this.filteredProducts = this.products;
-    this.listFilter = 'cart';
   }
 
   onRatingClicked(message: string): void {
@@ -45,6 +41,7 @@ export class ProductListComponent implements OnInit {
     this.showImage = !this.showImage;
   }
   ngOnInit(): void {
-    console.log('On Init');
+    this.products = this.productService.getProducts();
+    this.filteredProducts = this.products;
   }
 }
